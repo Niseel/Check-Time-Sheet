@@ -26,23 +26,32 @@
     <button type="button" id="continueButton" name="continueButton" class="btn btn-success btn-sm btn-block disabled" disabled>Checking ... </button>
   </div>
 
-  <div class="container mt-3">
-    <button type="button" id="filterButton" name="filterButton" class="btn btn-primary btn-sm btn-block">Generate</button>
-  </div>
+  <div class="container" id="filterGroup">
+    <div class="container mt-3">
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" id="jsonFileInput">
+        <label class="custom-file-label" for="jsonFileInput">Upload</label>
+      </div>
+    </div>
 
-  <div class="container mt-3">
-    <table class="table table-striped" id="dynamicTable" style="display: none;">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Name</th>
-          <th scope="col">Time</th>
-          <th scope="col">Status</th>
-        </tr>
-      </thead>
-    </table>
+    <div class="container mt-3">
+      <button type="button" id="filterButton" name="filterButton" class="btn btn-primary btn-sm btn-block" disabled>Generate</button>
+    </div>
 
-    <div id="dynamicTableJSON" style="display: none;"></div>
+    <div class="container mt-3">
+      <table class="table table-striped" id="dynamicTable" style="display: none;">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Time</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+      </table>
+
+      <div id="dynamicTableJSON" style="display: none;"></div>
+    </div>
   </div>
 
   <div id="top-bar">

@@ -3,21 +3,41 @@ import { PROXY_IP, PROXY_PORT, TIME_SHEET_URL } from '../../helper/app.constant.
 
 $(document).ready(function () {
   // Add an event listener to run code when the popup is opened.
-    // Get the current active tab's URL.
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        const currentUrl = tabs[0].url;
-        // Define your desired URL and the button elements.
-        const desiredUrl = TIME_SHEET_URL; 
-        if (currentUrl === desiredUrl) {
-            $('#filterButton').show();
-            $('#filterButton').click(function() {
-              checkTimeSheet(TIME_SHEET_URL);
-            });
-        } else {
-            getIpAndPort();
-            $('#filterButton').hide();
-        }
-    });
+  // Get the current active tab's URL.
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const currentUrl = tabs[0].url;
+      // Define your desired URL and the button elements.
+      const desiredUrl = TIME_SHEET_URL; 
+      
+      if (currentUrl === desiredUrl) {
+          $('#filterGroup').show();
+          $('#filterButton').click(function() {
+            checkTimeSheet(TIME_SHEET_URL);
+          });
+          getIpAndPort();
+          $('#continueButton').hide();
+      } else {
+          getIpAndPort();
+          $('#filterGroup').hide();
+      }
+  });
+
+
+  const jsonFileInput = document.getElementById('jsonFileInput');
+  // Listen for changes in the file input
+  jsonFileInput.addEventListener('change', function() {
+    // Check if a file is selected
+    if (jsonFileInput.files.length > 0) {
+      $("#filterButton").prop("disabled", false);
+    } else {
+      $("#filterButton").prop("disabled", true);
+    }
+  });
+  
+  $(".custom-file-input").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  });
 })
 
 function getIpAndPort() {
@@ -108,7 +128,7 @@ function checkTimeSheet() {
           if (response) {
               console.log('Collected Data:', response);
               // Do something with the data, like displaying it in the popup
-              showData();
+              showData1();
           }
       });
   });
@@ -138,3 +158,42 @@ function showData() {
       tableBody.append(row);
   });
 }
+
+function showData1() {
+  // Check if a file is selected
+  const jsonFileInput = document.getElementById('jsonFileInput');
+  if (jsonFileInput.files.length > 0) {
+    const file = jsonFileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      const fileContent = event.target.result;
+      console.log(fileContent);
+      const jsonContent = textToJson(fileContent);
+
+      // Send the JSON data to the content script
+      chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { message: 'jsonUpload', data: jsonContent }, function(response) {
+          // Handle the response from content.js if needed
+          console.log(response);
+        });
+      });
+    };
+    reader.readAsText(file);
+  }
+}
+
+function textToJson(fileContent) {
+  const data = [];
+  // Read the input text file line by line
+  const lines = fileContent.split('\n');
+  lines.forEach((line) => {
+    const name = line.trim();
+    data.push({ name });
+  });
+
+  // Write the data to the output JSON file
+  console.log(JSON.stringify(data, null, 2));
+}
+
+

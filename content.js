@@ -2,6 +2,7 @@
 function collectDataFromWebsite() {
   // Add your code here to collect data from the website
   // For example, you can use DOM manipulation to extract information from the page.
+  // COOK DATA HERE --> BEFORE SEND IT TO POPUP AND SHOW WHO NEED TO UPDATE TIME SHEET
   const data = {
       name: 'CongThanh'
   };
@@ -13,6 +14,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === 'collectData') {
     const collectedData = collectDataFromWebsite();
     console.log(collectedData);
-      sendResponse(collectedData);
+    sendResponse(collectedData);
+  }
+  else if (request.message === 'jsonUpload') {
+    const collectedData = collectDataFromWebsite();
+    console.log(collectedData);
+    sendResponse(collectedData);
   }
 });
