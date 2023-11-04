@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+
+  "name": "Check Time Sheet",
+  "version": "1.0",
+  "description": "This extension supports searching and reminding Check Team members of offshore Team FPT to quickly submit timesheets within the week.",
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting",
+    "webNavigation",
+    "http://np1apps020:5000/LiveTimesheet.aspx" ,
+    "https://www.w3schools.com/html/html_tables.asp"
+  ],
+
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
