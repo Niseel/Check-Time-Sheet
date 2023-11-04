@@ -99,5 +99,42 @@ function checkWebsiteConnection(url) {
 
 
 function checkTimeSheet() {
-  alert('Running time sheet')
+  chrome.runtime.sendMessage({ message: 'checkTimeSheetClicked' });
+
+  // Send a message to the content script to collect data
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, { message: 'collectData' }, function(response) {
+          // Handle the collected data from the content script
+          if (response) {
+              console.log('Collected Data:', response);
+              // Do something with the data, like displaying it in the popup
+              showData();
+          }
+      });
+  });
+}
+
+
+function showData() {
+  $('#dynamicTable').show();
+
+  const tableData = [
+    { id: 1, name: 'Mark', surname: 'Otto', email: '@mdo' },
+    { id: 1, name: 'Mark1', surname: 'Otto1', email: '@mdo1' },
+    { id: 1, name: 'Mark2', surname: 'Otto2', email: '@mdo2' },
+    // Add more data entries as needed
+  ];
+
+  // Reference to the table body element
+  const tableBody = $('#dynamicTable').append('<tbody></tbody>');
+
+  // Loop through the data and create table rows
+  $.each(tableData, function (index, dataItem) {
+      const row = $('<tr>');
+      row.append($('<td>').text(dataItem.id));
+      row.append($('<td>').text(dataItem.name));
+      row.append($('<td>').text(dataItem.surname));
+      row.append($('<td>').text(dataItem.email));
+      tableBody.append(row);
+  });
 }
