@@ -38,6 +38,13 @@ $(document).ready(function () {
     var fileName = $(this).val().split("\\").pop();
     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
   });
+
+  $("#copy-btn").click(function (ev) {
+    $(".msg-success").css("display", "block");
+    $(".msg-success").delay(2000).fadeOut("slow");
+  });
+
+  new ClipboardJS("#copy-btn");
 })
 
 function getIpAndPort() {
@@ -47,12 +54,12 @@ function getIpAndPort() {
     url: "https://api.ipify.org?format=json",
     dataType: "json",
     success: async function (data) {
-      console.log(data);
       const ipAddress = data.ip;
+      console.log('IP: ', ipAddress);
       // Check if the current proxy configuration matches the constants
       checkWebsiteConnection(TIME_SHEET_URL)
         .then((result) => {
-          console.log(result); // Website is accessible.
+          console.log(result, 'Website is accessible.'); 
           const isProxyConfigCorrect = result
 
           if (isProxyConfigCorrect) {
@@ -61,7 +68,7 @@ function getIpAndPort() {
           }
         })
         .catch((error) => {
-          console.error(error); // Handle the error.
+          console.error(error, 'Website is unaccessible.'); 
 
           $('#notification').show();
           disableCheckButton('disabled')
@@ -119,31 +126,12 @@ function checkWebsiteConnection(url) {
 
 
 function checkTimeSheet() {
-  chrome.runtime.sendMessage({ message: 'checkTimeSheetClicked' });
-
-  // Send a message to the content script to collect data
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, { message: 'collectData' }, function(response) {
-          // Handle the collected data from the content script
-          if (response) {
-              console.log('Collected Data:', response);
-              // Do something with the data, like displaying it in the popup
-              showData1();
-          }
-      });
-  });
+  // chrome.runtime.sendMessage({ message: 'checkTimeSheetClicked' });
+  showData();
 }
 
-
-function showData() {
+function showTable(tableData) {
   $('#dynamicTable').show();
-
-  const tableData = [
-    { id: 1, name: 'Mark', surname: 'Otto', email: '@mdo' },
-    { id: 1, name: 'Mark1', surname: 'Otto1', email: '@mdo1' },
-    { id: 1, name: 'Mark2', surname: 'Otto2', email: '@mdo2' },
-    // Add more data entries as needed
-  ];
 
   // Reference to the table body element
   const tableBody = $('#dynamicTable').append('<tbody></tbody>');
@@ -151,15 +139,24 @@ function showData() {
   // Loop through the data and create table rows
   $.each(tableData, function (index, dataItem) {
       const row = $('<tr>');
-      row.append($('<td>').text(dataItem.id));
+      row.append($('<td>').text(++index));
       row.append($('<td>').text(dataItem.name));
-      row.append($('<td>').text(dataItem.surname));
-      row.append($('<td>').text(dataItem.email));
+      row.append($('<td>').text(dataItem.timeSubmitted));
+      row.append($('<td>').text(dataItem.timeStatus));
+      row.append($('<td class="text-danger">').text(dataItem.action));
       tableBody.append(row);
+  });
+
+}
+
+function showMessage(tableData) {
+  tableData.forEach(member => {
+    $("#textMessage").append(`${member.name}: ${member.action}\n`); 
   });
 }
 
-function showData1() {
+
+function showData() {
   // Check if a file is selected
   const jsonFileInput = document.getElementById('jsonFileInput');
   if (jsonFileInput.files.length > 0) {
@@ -168,14 +165,14 @@ function showData1() {
 
     reader.onload = function(event) {
       const fileContent = event.target.result;
-      console.log(fileContent);
       const jsonContent = textToJson(fileContent);
 
       // Send the JSON data to the content script
       chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { message: 'jsonUpload', data: jsonContent }, function(response) {
           // Handle the response from content.js if needed
-          console.log(response);
+          showTable(response);
+          showMessage(response);
         });
       });
     };
@@ -184,16 +181,37 @@ function showData1() {
 }
 
 function textToJson(fileContent) {
-  const data = [];
-  // Read the input text file line by line
+  // Initialize the JSON structure
+  const jsonData = {
+    date: '',
+    department: '',
+    resource: '',
+    payroll: '',
+    manager: '',
+    time: 0,
+    employees: []
+  };
+
   const lines = fileContent.split('\n');
-  lines.forEach((line) => {
-    const name = line.trim();
-    data.push({ name });
-  });
 
-  // Write the data to the output JSON file
-  console.log(JSON.stringify(data, null, 2));
+  const firstLine = (lines[0].trim()).split(' ');
+  jsonData.date = firstLine[0];
+  jsonData.department = firstLine[1];
+  jsonData.resource = firstLine[2];
+  jsonData.payroll = firstLine[3];
+  jsonData.manager = firstLine[4];
+  jsonData.time = firstLine[5];
+
+  // Parse the rest of the lines and add them to the JSON array
+  for (let i = 1; i < lines.length; i++) {
+    const employee = lines[i].trim();
+    if (employee.length > 0) {
+      jsonData.employees.push(employee);
+    }
+  }
+  
+  // Convert the JSON data to a JSON string
+  const jsonStr = JSON.stringify(jsonData, null, 2);
+  // Print the JSON string
+  return JSON.parse(jsonStr);
 }
-
-

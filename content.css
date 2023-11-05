@@ -1,0 +1,25 @@
+/* content.css */
+
+/* 
+  $--color-primary: #3275b8;
+  $--color-primary-lighten: rgba(50, 117, 184, 0.15);
+  $--color-success: #32b877;
+  $--color-warning: #d9b100;
+  $--color-error: #c71a2f; 
+*/
+
+.highlighted-row--primary {
+  background-color: #3275b8;
+}
+
+.highlighted-row--warning { 
+  background-color: #d9b100;
+}
+
+.highlighted-row--done {
+  background-color: #32b877; 
+}
+
+.highlighted-row--danger {
+  background-color: #c71a2f; 
+}

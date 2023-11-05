@@ -10,7 +10,8 @@
     "scripting",
     "webNavigation",
     "http://np1apps020:5000/LiveTimesheet.aspx" ,
-    "https://www.w3schools.com/html/html_tables.asp"
+    "https://www.w3schools.com/html/html_tables.asp",
+    "http://127.0.0.1:5500/index.html"
   ],
 
   "action": {
@@ -24,7 +25,8 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["content.css"]
     }
   ],
   "background": {

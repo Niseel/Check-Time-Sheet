@@ -1,5 +1,5 @@
 <html>
-
+<title>Time Sheet Checking</title>
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <title></title>
@@ -10,8 +10,6 @@
   <link rel="stylesheet" href="src/css/bootstrap.min.css">
   <script src="src/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="src/js/clipboard.min.js"></script>
-  <script type="module" src="src/js/cpf.js"></script>
-  <script type="module" src="src/js/get_data.js"></script>
   <script type="module" src="src/js/get_ip.js"></script>
   <script type="module" src="src/js/check_timesheet.js"></script>
 </head>
@@ -46,6 +44,7 @@
             <th scope="col">Name</th>
             <th scope="col">Time</th>
             <th scope="col">Status</th>
+            <th scope="col" class="text-danger font-weight-bold">Action</th>
           </tr>
         </thead>
       </table>
@@ -54,161 +53,18 @@
     </div>
   </div>
 
-  <div id="top-bar">
-    <input type="button" id="genBtn" name="genBtn" class="btn btn-primary" value="Gerar Usuário" />
-    <br>
-    <input type="button" id="downUser" name="downUser" class="btn btn-secondary" value="Baixar Usuário" />
+  <div class="container">
+    <div class="form-group mb-1">
+      <label for="textMessage"></label>
+      <textarea class="form-control" id="textMessage" rows="3"></textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+      <div class="btn btn-outline-info btn-sm" id="copy-btn" data-clipboard-target="#textMessage">Copy</div>
+    </div>
   </div>
-  <div id="content" class="container">
 
-    <div class="user-image">
-      <dl>
-        <figure>
-          <img src="" alt="User Image" id="user_img" width="104" height="104">
-        </figure>
-      </dl>
-    </div>
-
-  
-      <div class="msg-warning alert alert-warning">
-        Copiado para área de transferência
-      </div>
-
-
-    <div class='header-section'>
-      <h4>Dados Pessoais</h4>
-    </div>
-
-    <form id="dataForm" name="dataForm">
-      <fieldset class="dataBox">
-        <dt>
-          <label for="name">Nome</label>
-        </dt>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Nome" aria-label="Nome" aria-describedby="Nome" id="name"
-            name="name" readonly>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#name"><i
-                class="material-icons">content_copy</i></button>
-          </div>
-        </div>
-
-        <dt>
-          <label for="email">E-Mail</label>
-        </dt>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="E-mail" aria-label="E-Mail" aria-describedby="E-Mail"
-            id="email" name="email" readonly>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#email"><i
-                class="material-icons">content_copy</i></button>
-          </div>
-        </div>
-
-        <dt>
-          <label for="nickname">Apelido</label>
-        </dt>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Apelido" aria-label="Apelido" aria-describedby="Apelido"
-            id="nickname" name="nickname" readonly>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#nickname"><i
-                class="material-icons">content_copy</i></button>
-          </div>
-        </div>
-
-        <dt>
-          <label for="cpf">CPF</label>
-        </dt>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="CPF" aria-label="CPF" aria-describedby="CPF" id="cpf"
-            name="cpf" readonly>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#cpf"><i
-                class="material-icons">content_copy</i></button>
-          </div>
-        </div>
-
-  </div>
-  </fieldset>
-
-  <fieldset class="dataBox">
-    <div class='header-section'>
-      <h4>Localização</h4>
-    </div>
-
-    <dt>
-      <label for="city">Cidade</label>
-    </dt>
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Cidade" aria-label="Cidade" aria-describedby="Cidade" id="city"
-        name="city" readonly>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#city"><i
-            class="material-icons">content_copy</i></button>
-      </div>
-    </div>
-
-    <dt>
-      <label for="street">Rua</label>
-    </dt>
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Rua" aria-label="Rua" aria-describedby="Rua" id="street"
-        name="street" readonly>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#street"><i
-            class="material-icons">content_copy</i></button>
-      </div>
-    </div>
-
-    <dt>
-      <label for="state">Estado</label>
-    </dt>
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Estado" aria-label="Estado" aria-describedby="Estado" id="state"
-        name="state" readonly>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#state"><i
-            class="material-icons">content_copy</i></button>
-      </div>
-    </div>
-
-
-  </fieldset>
-
-
-  <fieldset class="dataBox">
-    <div class='header-section'>
-      <h4>Extra</h4>
-    </div>
-
-    <dt>
-      <label for="phone">Telefone</label>
-    </dt>
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Telefone" aria-label="Telefone" aria-describedby="Telefone" id="phone"
-        name="phone" readonly>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#phone"><i
-            class="material-icons">content_copy</i></button>
-      </div>
-    </div>
-
-    <dt>
-      <label for="dob">Data de Nascimento</label>
-    </dt>
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Data de Nascimento" aria-label="Data de Nascimento" aria-describedby="Data de Nascimento" id="dob"
-        name="dob" readonly>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" id="copy-btn" type="button" data-clipboard-target="#dob"><i
-            class="material-icons">content_copy</i></button>
-      </div>
-    </div>
-
-  </fieldset>
-
-  </form>
+  <div class="msg-success alert alert-success">
+    Copied successfully 🤣🤣🤣 
   </div>
 </body>
 

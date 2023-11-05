@@ -117,7 +117,7 @@ li a {
 }
 
 body {
-  width: 310px;
+  min-width: 650px;
 }
 
 .custom-md {
@@ -125,9 +125,10 @@ body {
   padding-right: 2px !important;
 }
 
-.msg-warning {
+.msg-success {
   position: fixed !important;
   top: 20px;
+  right: 10px;
   text-align: center;
   white-space: nowrap;
   font-size: 0.9em;
